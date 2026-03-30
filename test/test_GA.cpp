@@ -12,7 +12,7 @@ int main(){
 
     int population_size = 10;
     std::cout << "Basic population initialization (size = " << population_size << "):" << '\n';
-    GA::Population<8> population(10);
+    GA::Population<8> population(population_size);
     for(int i=0; i<10; i++){
         std::cout << "population[" << i << "]=" << population.population[i].bits << '\n';
     };
