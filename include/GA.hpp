@@ -1,5 +1,5 @@
-#ifndef GA_FUNC
-#define GA_FUNC
+#ifndef LIB_GA
+#define LIB_GA
 
 #include <vector>
 #include <iostream>
@@ -7,8 +7,9 @@
 #include <random>
 namespace GA{
 template<size_t N>
-struct Chromosome{
-    std::bitset<N> bits;
+struct Population{
+    std::vector<std::bitset<N>> chrosomes;
+    std::vector<float> fitness_values;
 
     static std::mt19937& get_random_engine(){
         static std::random_device rd;
@@ -16,40 +17,32 @@ struct Chromosome{
         return gen;
     };
 
-    Chromosome(){
+    Population(int pop_size){
         auto& gen = get_random_engine();
         std::bernoulli_distribution dist(0.5);
-        for(int i=0; i<N; i++){
-            bits[i] = dist(gen);
-        };
-    };
-    ~Chromosome() = default;
-};/*struct Chromosome*/
-
-template<size_t N>
-struct Population{
-    std::vector<Chromosome<N>> population;
-
-    Population(int pop_size){
-        for(int i=0; i<pop_size; i++){
-            population.emplace_back();
+        chrosomes.resize(pop_size);
+        for(auto& chromo : chrosomes){
+            for(int i=0; i<chrosomes[0].size(); i++){
+                chromo[i] = dist(gen);
+            };
         }
     };
     ~Population() = default;
 };/*struct Population*/
 
-
 template<size_t N>
-int mutation(Chromosome<N>& chromo, float mut_rate){
-    auto& gen = chromo.get_random_engine();
+int mutation(Population<N>& chromos, float mut_rate){
+    auto& gen = chromos.get_random_engine();
     std::bernoulli_distribution dist(mut_rate);
-    for(int i=0; i<N; i++){
-        if(dist(gen)){
-            chromo.bits.flip(i);
-        };
+    for(auto& chromo : chromos.chrosomes){
+        for(int i=0; i<chromo.size(); i++){
+            if(dist(gen)){
+                chromo.flip(i);
+            };
+        }
     };
     return 0;
-};
+};/*int mutation*/
 
 }/*namespace GA*/;
 

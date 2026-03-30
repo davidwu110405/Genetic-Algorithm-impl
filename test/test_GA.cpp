@@ -1,21 +1,19 @@
 #include "GA.hpp"
 
 int main(){
-    std::cout << "Basic chromosome initialization:" << '\n';
-    GA::Chromosome<8> chromo;
-    std::cout << chromo.bits << "\n\n";
-
-    float mutation_rate = 0.05;
-    std::cout << "Chromosome mutation test" << '(' << mutation_rate << "):" << '\n';
-    GA::mutation(chromo, mutation_rate);
-    std::cout << chromo.bits << "\n\n";
-
-    int population_size = 10;
+    int population_size = 10000;
     std::cout << "Basic population initialization (size = " << population_size << "):" << '\n';
     GA::Population<8> population(population_size);
     for(int i=0; i<10; i++){
-        std::cout << "population[" << i << "]=" << population.population[i].bits << '\n';
+        std::cout << "population[" << i << "]=" << population.chrosomes[i] << '\n';
     };
+
+    float mutation_rate = 0.05;
+    GA::mutation(population, mutation_rate);
+    std::cout << "Mutation test(mutation rate = " << mutation_rate << "):" << '\n';
+    for(int i=0; i<10; i++){
+        std::cout << "population[" << i << "]=" << population.chrosomes[i] << '\n';
+    }
 
     std::cout << '\n' << "End of test." << '\n';
     return 0;
