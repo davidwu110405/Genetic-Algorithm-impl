@@ -1,8 +1,5 @@
 #include "GA.hpp"
-
-float Xby2(float x){
-    return std::pow(x,2);
-};
+#include "tools.hpp"
 
 int main(){
     int population_size = 10000;
@@ -13,26 +10,17 @@ int main(){
     };
 
     float mutation_rate = 0.05;
-    GA::mutation(population, mutation_rate);
+    MEASURE_TIME(GA::mutation<8>, population, mutation_rate);
+    // GA::mutation(population, mutation_rate);
     std::cout << "\nMutation test(mutation rate = " << mutation_rate << "):" << '\n';
     for(int i=0; i<10; i++){
         std::cout << "population[" << i << "]=" << population.chromos[i] << '\n';
     };
 
-    std::cout << "\nsingle Chromosome to value test:" << '\n';
-    for(int i=0; i<10; i++){
-        double value = GA::chromosome_to_value(population.chromos[i], population.range_chromos, 10, -10);
-        std::cout << "population[" << i << "]=" << value << "|fitness value:" << GA::fitness_value(Xby2, value) << '\n';
-    };
-
-    std::cout << "\nsingle Fitness value test:" << GA::fitness_value(Xby2, 2) << '\n';
-
     std::cout << "\nParam initialization test:" << '\n';
     GA::GA_Params params_default;
-    params_default.print_params();
-    
 
-
+    MEASURE_TIME(&GA::GA_Params::print_params, &params_default);
 
     std::cout << "\nPopulation value update test:" << '\n';
     
