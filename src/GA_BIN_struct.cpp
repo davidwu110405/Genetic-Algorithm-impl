@@ -125,7 +125,7 @@ void Population::print_population(const Params& params, int topk){
     std::cout << "Lenght of chromos: " << params.chromosome_length << '\n';
     std::cout << "Top " << topk << " chromos: " << '\n';
     for(int i=0; i<topk; i++){
-        for(size_t j=0; j<params.chromosome_length; j++){
+        for(int j=0; j<params.chromosome_length; j++){
             if(j%params.bits_per_answer == 0){
                 std::cout << '|';
             }
@@ -133,7 +133,7 @@ void Population::print_population(const Params& params, int topk){
         }
         std::cout << ":\n";
         
-        for(int j=0; j<chromo_values[i].size(); j++){
+        for(size_t j=0; j<chromo_values[i].size(); j++){
             std::cout << '|' << chromo_values[i][j];
         }
         std::cout << "\nfitness value: " << fitness_values[i] << '\n';
@@ -186,7 +186,7 @@ int Population::mutation(const Params& params){
 };/*int mutation*/
 
 int Population::crossover(const Params& params, const int points){
-    std::mt19937& gen = get_random_engine();
+    // std::mt19937& gen = get_random_engine();
     assert((points > 0 && points < params.chromosome_length) && "Assertion error: crossover points must be above 0 and below chromosome length.");
     switch(params.crossover_method){
         case CrossMethods::SINGLE_POINT:{
@@ -207,12 +207,12 @@ int Population::refresh_selection(const SelMethods sel_method){
     selection_scores.clear();
     switch(sel_method){
         case SelMethods::BEST:{
-            for(int i=0; i<chromos.size(); i++){
+            for(size_t i=0; i<chromos.size(); i++){
                 if(chromos[i].size() == 0){
                     break;
                 }
                 selection_scores.push_back(0);
-                for(int j=0; j<chromos.size(); j++){
+                for(size_t j=0; j<chromos.size(); j++){
                     if(chromos[j].size() == 0){
                         break;
                     }
@@ -224,7 +224,7 @@ int Population::refresh_selection(const SelMethods sel_method){
             break;
         }
         case SelMethods::RANDOM:{
-            for(int i=0; i<chromos.size(); i++){
+            for(size_t i=0; i<chromos.size(); i++){
                 if(chromos[i].size() == 0){
                     break;
                 }

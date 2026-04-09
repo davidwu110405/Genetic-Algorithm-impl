@@ -37,7 +37,7 @@ std::string enum2str(MutMethods method);
 
 struct Params{
     int chromosome_length;
-    int bits_per_answer;
+    
     int population_size;
     int generation_num;
     // SelMethods selection_method;
@@ -46,8 +46,7 @@ struct Params{
     float mutation_prob;
     MutMethods mutation_method;
     std::array<double, 2> search_bound;
-    
-
+    int bits_per_answer;
     int answer_count;
 
     void print_params();

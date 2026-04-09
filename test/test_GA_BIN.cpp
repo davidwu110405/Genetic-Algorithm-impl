@@ -10,7 +10,7 @@ double testfunc(std::vector<double>& input){
 }
 
 int main(){
-    GA_BIN::Params ga_params(100, 10, 10);
+    GA_BIN::Params ga_params(100, 10, 100);
     ga_params.print_params();
     GA_BIN::Population population(ga_params);
 
