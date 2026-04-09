@@ -23,7 +23,7 @@ std::vector<double> roulette_prob(const std::vector<double> input){
     for(double v: input){
         sum += v;
     }
-    for(int i=0; i<input.size(); i++){
+    for(size_t i=0; i<input.size(); i++){
         output.push_back(input[i]/sum);
     }
     return output;
