@@ -3,9 +3,10 @@
 #pragma once
 
 #include <vector>
-#include <math.h>
+#include <cmath>
 #include <random>
 #include <cassert>
+#include <array>
 // #include <iostream>
 // #include <string>
 
@@ -86,23 +87,22 @@ struct Population{
     int update_chromo_value(const Params&);
     template<typename Func> double _fitness_value(Func f, std::vector<double>& x){
         return 1/(1+std::abs(f(x)));
-    };
+    }
 
     
 
     /*main functions*/
     int mutation(const Params&);
-    template<typename Func> int evaluatiion(const Params& params, Func f){
+    template<typename Func> int evaluatiion(Func f){
         fitness_values.clear();
-        for(int i=0; i<chromos.size();i++){
+        for(size_t i=0; i<chromos.size();i++){
             if(chromos[i].size() == 0){
                 break;
             };
-            // std::cout << "testfunc output = " << f(chromo_values[i]) << '\n';
             fitness_values.push_back(_fitness_value(f, chromo_values[i]));
         }
         return 0;
-    };/*int evaluatiion*/
+    }/*int evaluatiion*/
     int crossover(const Params&, int points=2);
     int refresh_selection(const SelMethods);
 

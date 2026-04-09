@@ -10,18 +10,18 @@ double testfunc(std::vector<double>& input){
 }
 
 int main(){
-    GA_BIN::Params ga_params(60, 10, 5);
+    GA_BIN::Params ga_params(100, 10, 10);
     ga_params.print_params();
     GA_BIN::Population population(ga_params);
 
     population.update_chromo_value(ga_params);
-    population.evaluatiion(ga_params, testfunc);
+    population.evaluatiion(testfunc);
     population.refresh_selection(GA_BIN::SelMethods::BEST);
     population.print_population(ga_params, 5);
 
     population.mutation(ga_params);
     population.update_chromo_value(ga_params);
-    population.evaluatiion(ga_params, testfunc);
+    population.evaluatiion(testfunc);
     population.refresh_selection(GA_BIN::SelMethods::RANDOM);
     population.print_population(ga_params, 5);
 

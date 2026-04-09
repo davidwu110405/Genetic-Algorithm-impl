@@ -117,7 +117,7 @@ int mutation(Population<N>& chromos, float mut_rate){
 
 /*single chromosome to ranged value*/
 template<size_t N, typename T>
-double chromosome_to_value(std::bitset<N>& chromo, u_long range_input, T bound_upper, T bound_lower){
+double chromosome_to_value(std::bitset<N>& chromo, unsigned long range_input, T bound_upper, T bound_lower){
     double range_output = static_cast<double>(bound_upper - bound_lower);
     double input = static_cast<double>(chromo.to_ulong());
     double range_input_double = static_cast<double>(range_input);

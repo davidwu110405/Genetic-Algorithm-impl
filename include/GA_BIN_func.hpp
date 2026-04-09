@@ -3,10 +3,11 @@
 #pragma once
 
 #include <vector>
+#include <cmath>
 #include <cassert>
 
 namespace GA_BIN{
-u_long vector_bool2ulong(const std::vector<bool>&, const size_t, const size_t);
+unsigned long vector_bool2ulong(const std::vector<bool>&, const size_t, const size_t);
 std::vector<double> roulette_prob(const std::vector<double>);
 
 };
