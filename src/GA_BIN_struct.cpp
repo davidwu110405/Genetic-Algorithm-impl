@@ -48,7 +48,6 @@ Params::Params(
     int bits,
     int pop_size,
     int gen_num,
-    // SelMethods sel_meth,
     float cross_prob,
     CrossMethods cross_meth,
     float mut_prob,
@@ -59,7 +58,6 @@ Params::Params(
     chromosome_length(chromo_len),
     population_size(pop_size),
     generation_num(gen_num),
-    // selection_method(sel_meth),
     crossover_prob(cross_prob),
     crossover_method(cross_meth),
     mutation_prob(mut_prob),
@@ -73,7 +71,6 @@ void Params::print_params(){
     std::cout << "Chromosome length    : " << chromosome_length << '\n';
     std::cout << "Population size      : " << population_size << '\n';
     std::cout << "Generation number    : " << generation_num << '\n';
-    // std::cout << "Selection method     : " << enum2str(selection_method) << '\n';
     std::cout << "Crossover probability: " << crossover_prob << '\n';
     std::cout << "Crossover method     : " << enum2str(crossover_method) << '\n';
     std::cout << "Mutation probability : " << mutation_prob << '\n';
@@ -83,7 +80,6 @@ void Params::print_params(){
 Population::Population(const Params& params){
     bool random_bit;
     std::vector<bool> temp_vec_bool;
-    // std::vector<double> temp_vec_double(params.answer_count, 0.0);
     int pop_size = params.population_size;
     int chromo_len = params.chromosome_length;
     std::mt19937& gen = get_random_engine();
@@ -126,7 +122,7 @@ void Population::print_population(const Params& params, int topk){
     std::cout << "Top " << topk << " chromos: " << '\n';
     for(int i=0; i<topk; i++){
         for(int j=0; j<params.chromosome_length; j++){
-            if(j%params.bits_per_answer == 0){
+            if(j % params.bits_per_answer == 0){
                 std::cout << '|';
             }
             std::cout << chromos[i][j];
@@ -149,7 +145,7 @@ int Population::update_chromo_value(const Params& params){
     }
 
     for(size_t i=0; i<chromos.size(); i++){
-        if(chromos[i].size() == 0){
+        if(chromos[i].empty()){
             break;
         }
         for(int j=0; j<params.answer_count;j++){
@@ -186,7 +182,7 @@ int Population::mutation(const Params& params){
 };/*int mutation*/
 
 int Population::crossover(const Params& params, const int points){
-    // std::mt19937& gen = get_random_engine();
+    // std::`mt19937& gen = get_random_engine();
     assert((points > 0 && points < params.chromosome_length) && "Assertion error: crossover points must be above 0 and below chromosome length.");
     switch(params.crossover_method){
         case CrossMethods::SINGLE_POINT:{
@@ -208,16 +204,16 @@ int Population::refresh_selection(const SelMethods sel_method){
     switch(sel_method){
         case SelMethods::BEST:{
             for(size_t i=0; i<chromos.size(); i++){
-                if(chromos[i].size() == 0){
+                if(chromos[i].empty()){
                     break;
                 }
                 selection_scores.push_back(0);
                 for(size_t j=0; j<chromos.size(); j++){
-                    if(chromos[j].size() == 0){
+                    if(chromos[j].empty()){
                         break;
                     }
                     if(fitness_values[i]>fitness_values[j]){
-                        selection_scores[i] += 1;
+                        selection_scores[i]++;
                     }
                 }
             }

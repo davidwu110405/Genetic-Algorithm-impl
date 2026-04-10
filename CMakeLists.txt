@@ -25,5 +25,5 @@ add_executable(test_GA_BIN test/test_GA_BIN.cpp)
 target_link_libraries(test_GA_BIN PRIVATE lib_GA_BIN)
 
 
-# add_executable(test_performance test/performance.cpp)
-# target_link_libraries(test_performance PRIVATE lib_GA lib_tools)
+add_executable(test_performance test/performance.cpp)
+target_link_libraries(test_performance PRIVATE lib_GA_BIN lib_tools)

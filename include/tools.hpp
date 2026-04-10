@@ -2,26 +2,35 @@
 #define LIB_TOOLS
 
 #include <iostream>
-#include <chrono>
-#include <functional> // 包含 std::invoke
 #include <string>
+#include <chrono>
 
-template <typename Func, typename... Args>
-void _measure_time_impl(std::string func_name, Func&& func, Args&&... args) {
-    auto start = std::chrono::high_resolution_clock::now();
+// 定義一個計時器類別
+class ScopedTimer {
+public:
+    // 建構子：記錄開始時間
+    explicit ScopedTimer(const std::string& name) 
+        : func_name(name), start_time(std::chrono::high_resolution_clock::now()) {}
 
-    // 執行函式
-    std::invoke(std::forward<Func>(func), std::forward<Args>(args)...);
+    // 解構子：記錄結束時間並印出
+    ~ScopedTimer() {
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> elapsed = end_time - start_time;
+        
+        std::cout << "測試對象: " << func_name << "\n"
+                  << "執行耗時: " << elapsed.count() << " ms\n"
+                  << "------------------------------" << std::endl;
+    }
 
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = end - start;
+private:
+    std::string func_name;
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
+};
 
-    // 輸出格式化結果
-    std::cout << "[測試對象: " << func_name << "]\n"
-              << "執行耗時: " << elapsed.count() << " ms\n"
-              << "------------------------------" << std::endl;
-}
+// 產生唯一的變數名稱，避免在同一個作用域內宣告多個計時器時發生命名衝突
+#define CONCAT_IMPL(x, y) x##y
+#define MACRO_CONCAT(x, y) CONCAT_IMPL(x, y)
 
-#define MEASURE_TIME(func, ...) _measure_time_impl(#func, func, ##__VA_ARGS__)
-
+// 最終使用的巨集
+#define MEASURE_SCOPE(name) ScopedTimer MACRO_CONCAT(_timer_, __LINE__)(name)
 #endif //LIB_TOOLS

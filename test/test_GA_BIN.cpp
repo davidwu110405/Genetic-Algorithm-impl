@@ -13,20 +13,18 @@ int main(){
     GA_BIN::Params ga_params(100, 10, 100);
     ga_params.print_params();
     GA_BIN::Population population(ga_params);
-
     population.update_chromo_value(ga_params);
-    population.evaluatiion(testfunc);
+
+    population.evaluation(testfunc);
     population.refresh_selection(GA_BIN::SelMethods::BEST);
     population.print_population(ga_params, 5);
 
     population.mutation(ga_params);
     population.update_chromo_value(ga_params);
-    population.evaluatiion(testfunc);
+
+    population.evaluation(testfunc);
     population.refresh_selection(GA_BIN::SelMethods::RANDOM);
     population.print_population(ga_params, 5);
-
-    
-
 
     return 0;
 }

@@ -7,10 +7,6 @@
 #include <random>
 #include <cassert>
 #include <array>
-// #include <iostream>
-// #include <string>
-
-
 
 namespace GA_BIN{
 
@@ -37,10 +33,8 @@ std::string enum2str(MutMethods method);
 
 struct Params{
     int chromosome_length;
-    
     int population_size;
     int generation_num;
-    // SelMethods selection_method;
     float crossover_prob;
     CrossMethods crossover_method;
     float mutation_prob;
@@ -55,7 +49,6 @@ struct Params{
             const int bits = 10,
             const int pop_size = 10,
             const int gen_num = 10,
-            // const SelMethods sel_meth = SelMethods::BEST,
             const float cross_prob = 0.6f,
             const CrossMethods cross_meth = CrossMethods::SINGLE_POINT,
             const float mut_prob = 0.05f,
@@ -92,7 +85,7 @@ struct Population{
 
     /*main functions*/
     int mutation(const Params&);
-    template<typename Func> int evaluatiion(Func f){
+    template<typename Func> int evaluation(Func f){
         fitness_values.clear();
         for(size_t i=0; i<chromos.size();i++){
             if(chromos[i].size() == 0){
@@ -101,11 +94,9 @@ struct Population{
             fitness_values.push_back(_fitness_value(f, chromo_values[i]));
         }
         return 0;
-    }/*int evaluatiion*/
+    }/*int evaluation*/
     int crossover(const Params&, int points=2);
     int refresh_selection(const SelMethods);
-
-
 };/*struct Population*/
 
 }

@@ -1,28 +1,49 @@
-#include "GA.hpp"
+#include "GA_BIN_struct.hpp"
 #include "tools.hpp"
+
+double testfunc(std::vector<double>& input){
+    double tmp=0.0;
+    for(auto& x: input){
+        tmp += x;
+    }
+    return tmp;
+}
 
 int main(){
     int population_size = 10000;
+    GA_BIN::Params ga_params(100, 10, population_size);
+    GA_BIN::Population population(ga_params);
     std::cout << "Basic population initialization (size = " << population_size << "):" << '\n';
-    GA::Population<8> population(population_size);
-    for(int i=0; i<10; i++){
-        std::cout << "population[" << i << "]=" << population.chromos[i] << '\n';
-    };
-
-    float mutation_rate = 0.05;
-    MEASURE_TIME(GA::mutation<8>, population, mutation_rate);
-    // GA::mutation(population, mutation_rate);
-    std::cout << "\nMutation test(mutation rate = " << mutation_rate << "):" << '\n';
-    for(int i=0; i<10; i++){
-        std::cout << "population[" << i << "]=" << population.chromos[i] << '\n';
-    };
-
-    std::cout << "\nParam initialization test:" << '\n';
-    GA::GA_Params params_default;
-
-    MEASURE_TIME(&GA::GA_Params::print_params, &params_default);
-
-    std::cout << "\nPopulation value update test:" << '\n';
+    // {MEASURE_SCOPE("GA_BIN::Params::Params()");
+    //     GA_BIN::Params test_params(100, 10, population_size);
+    // }
+    // {MEASURE_SCOPE("GA_BIN::Params::print_params()");
+    //     ga_params.print_params();
+    // }
+    // {MEASURE_SCOPE("GA_BIN::Population::Population()");
+    //     GA_BIN::Population population(ga_params);
+    // }
+    {MEASURE_SCOPE("GA_BIN::Population::update_chromo_value()");
+        population.update_chromo_value(ga_params);
+    }
+    {MEASURE_SCOPE("GA_BIN::Population::evaluation()");
+        population.evaluation(testfunc);
+    }
+    {MEASURE_SCOPE("GA_BIN::Population::refresh_selection(GA_BIN::SelMethods::BEST)");
+        population.refresh_selection(GA_BIN::SelMethods::BEST);
+    }
+    // {MEASURE_SCOPE("GA_BIN::Population::refresh_selection(GA_BIN::SelMethods::RANDOM)");
+    //     population.refresh_selection(GA_BIN::SelMethods::RANDOM);
+    // }
+    // {MEASURE_SCOPE("GA_BIN::Population::mutation()");
+    //     population.mutation(ga_params);
+    // }
+    // {MEASURE_SCOPE("GA_BIN::Population::print_population()");
+    //     population.print_population(ga_params, 5);
+    // }
+    // {MEASURE_SCOPE("GA_BIN::Params::print_params()");
+    //     ga_params.print_params();
+    // }
     
     std::cout << '\n' << "End of test." << '\n';
     return 0;
