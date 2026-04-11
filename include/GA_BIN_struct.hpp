@@ -69,6 +69,7 @@ struct Population{
     std::vector<int> selection_scores;
     double range_chromos;
     int generation_count;
+    int current_chromo_count;
 
     Population(const Params&);
     ~Population() = default;
@@ -76,16 +77,15 @@ struct Population{
     /*sub functions*/
     static std::mt19937& get_random_engine();
     void print_population(const Params&, int);
-    int update_chromo_value(const Params&);
+    
     template<typename Func> double _fitness_value(Func f, std::vector<double>& x){
         return 1/(1+std::abs(f(x)));
     }
 
-    
-
     /*main functions*/
-    int mutation(const Params&);
-    template<typename Func> int evaluation(Func f){
+    int _update_chromo_value(const Params&);
+    int _mutation(const Params&);
+    template<typename Func> int _evaluation(Func f){
         fitness_values.clear();
         for(size_t i=0; i<chromos.size();i++){
             if(chromos[i].size() == 0){
@@ -94,9 +94,9 @@ struct Population{
             fitness_values.push_back(_fitness_value(f, chromo_values[i]));
         }
         return 0;
-    }/*int evaluation*/
-    int crossover(const Params&, int points=2);
-    int refresh_selection(const SelMethods);
+    }/*int _evaluation*/
+    int _crossover(const Params&, int points=2);
+    int _refresh_selection(const SelMethods);
 };/*struct Population*/
 
 }

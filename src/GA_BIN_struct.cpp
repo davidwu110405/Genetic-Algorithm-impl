@@ -1,5 +1,7 @@
 #include <iostream>
 #include <random>
+#include <algorithm>
+#include <cassert>
 #include "GA_BIN_func.hpp"
 #include "GA_BIN_struct.hpp"
 
@@ -75,6 +77,7 @@ void Params::print_params(){
     std::cout << "Crossover method     : " << enum2str(crossover_method) << '\n';
     std::cout << "Mutation probability : " << mutation_prob << '\n';
     std::cout << "Mutation method      : " << enum2str(mutation_method) << '\n';
+    std::cout << "Answer count         : " << answer_count << '\n';
 }
 
 Population::Population(const Params& params){
@@ -105,6 +108,8 @@ Population::Population(const Params& params){
         };
     };
     range_chromos = static_cast<double>(std::pow(2, params.bits_per_answer));
+    generation_count = 0;
+    current_chromo_count = pop_size;
 };/*Population::Population*/
 
 std::mt19937& Population::get_random_engine(){
@@ -114,10 +119,10 @@ std::mt19937& Population::get_random_engine(){
 };
 
 void Population::print_population(const Params& params, int topk){
-    if(topk > params.population_size){
-        topk = params.population_size;
+    if(topk > current_chromo_count){
+        topk = current_chromo_count;
     }
-    std::cout << "Number of chromos: " << params.population_size << " (Reserved capacity: " << chromos.capacity() << ')' <<'\n';
+    std::cout << "Current size of chromos: " << current_chromo_count << " (Reserved capacity: " << chromos.capacity() << ')' <<'\n';
     std::cout << "Lenght of chromos: " << params.chromosome_length << '\n';
     std::cout << "Top " << topk << " chromos: " << '\n';
     for(int i=0; i<topk; i++){
@@ -134,20 +139,21 @@ void Population::print_population(const Params& params, int topk){
         }
         std::cout << "\nfitness value: " << fitness_values[i] << '\n';
         std::cout << "selection score: " << selection_scores[i] << '\n';
-
     };
 };/*void Population::print_population*/
 
-int Population::update_chromo_value(const Params& params){
+int Population::_update_chromo_value(const Params& params){
     double tmp = 0.0;
+    for(size_t i=0; i<chromos.capacity(); i++){
+        if(chromos[i].size() == 0){
+            current_chromo_count = i;
+            break;
+        }
+    }
     for(auto& chromo_value: chromo_values){
         chromo_value.clear();
     }
-
-    for(size_t i=0; i<chromos.size(); i++){
-        if(chromos[i].empty()){
-            break;
-        }
+    for(int i=0; i<current_chromo_count; i++){
         for(int j=0; j<params.answer_count;j++){
             tmp = static_cast<double>(vector_bool2ulong(chromos[i], j*params.bits_per_answer, params.bits_per_answer));
             tmp = tmp / range_chromos * (params.search_bound[0] - params.search_bound[1]) + params.search_bound[1];
@@ -155,9 +161,9 @@ int Population::update_chromo_value(const Params& params){
         }
     }
     return 0;
-};/*int Population::update_chromo_value*/
+};/*int Population::_update_chromo_value*/
 
-int Population::mutation(const Params& params){
+int Population::_mutation(const Params& params){
     std::mt19937& gen = get_random_engine();
     switch(params.mutation_method){
         case MutMethods::CONST:{
@@ -172,6 +178,7 @@ int Population::mutation(const Params& params){
             break;
         }
         case MutMethods::DECREASE:{
+            std::cout << "Mutation with decreasing probability is not available yet.";
             break;
         }
         default:
@@ -179,25 +186,47 @@ int Population::mutation(const Params& params){
     }
     
     return 0;
-};/*int mutation*/
+};/*int Population::_mutation*/
 
-int Population::crossover(const Params& params, const int points){
-    // std::`mt19937& gen = get_random_engine();
-    assert((points > 0 && points < params.chromosome_length) && "Assertion error: crossover points must be above 0 and below chromosome length.");
+int Population::_crossover(const Params& params, const int points){
+    std::mt19937& gen = get_random_engine();
+    assert((points > 0 && points < params.chromosome_length) && "Assertion error: _crossover points must be above 0 and below chromosome length.");
     switch(params.crossover_method){
         case CrossMethods::SINGLE_POINT:{
+            int cut_point;
+            int idx_parrent1, idx_parrent2;
+            std::uniform_int_distribution<int> dist(1, params.chromosome_length);
+            for(int i=0; i<params.crossover_prob / 2 * params.population_size; i++){
+                cut_point = dist(gen);
+                idx_parrent1 = static_cast<int>(std::max_element(selection_scores.begin(), selection_scores.end()) - selection_scores.begin());
+                selection_scores[idx_parrent1]=0;
+                idx_parrent2 = static_cast<int>(std::max_element(selection_scores.begin(), selection_scores.end()) - selection_scores.begin());
+                selection_scores[idx_parrent2]=0;
+                assert((chromos[current_chromo_count].size() == 0 && chromos[current_chromo_count+1].size() == 0) && "Assertion error: vector space for child isn`t empty.");
+                for(int j=0; j<params.chromosome_length; j++){
+                    if(j>=cut_point){
+                        chromos[current_chromo_count].push_back(chromos[idx_parrent2][j]);
+                        chromos[current_chromo_count+1].push_back(chromos[idx_parrent1][j]);
+                    }else{
+                        chromos[current_chromo_count].push_back(chromos[idx_parrent1][j]);
+                        chromos[current_chromo_count+1].push_back(chromos[idx_parrent2][j]);
+                    }
+                }
+                current_chromo_count += 2;
+            }
             break;
         }
         case CrossMethods::MULTI_POINT:{
+            std::cout << "Crossover with multipoint is not available yet.";
             break;
         }
         default:
             return 1;
     }
     return 0;
-};/*int crossover*/
+};/*int Population::_crossover*/
 
-int Population::refresh_selection(const SelMethods sel_method){
+int Population::_refresh_selection(const SelMethods sel_method){
     std::mt19937& gen = get_random_engine();
     std::uniform_int_distribution<int> dist(-100, 100);
     selection_scores.clear();
@@ -239,6 +268,6 @@ int Population::refresh_selection(const SelMethods sel_method){
             return 1;
     }
     return 0;
-};
+};/*int Population::_refresh_selection*/
 
 };

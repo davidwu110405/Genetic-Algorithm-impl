@@ -5,7 +5,7 @@ unsigned long vector_bool2ulong
     (const std::vector<bool>& chromo,
      const size_t begin_idx,
      const size_t offset){
-    assert((begin_idx + offset) <= chromo.size() && "Iterator calculation out of bounds!");
+    assert((begin_idx + offset) <= chromo.size() && "Assertion error: Iterator calculation out of bounds!");
     unsigned long tmp = 0;
     
     for(size_t i=0; i<offset; i++){
