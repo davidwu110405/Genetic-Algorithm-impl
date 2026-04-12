@@ -97,6 +97,7 @@ struct Population{
     }/*int _evaluation*/
     int _crossover(const Params&, int points=2);
     int _refresh_selection(const SelMethods);
+    int _prepare_next_generation(const Params&);
 };/*struct Population*/
 
 }

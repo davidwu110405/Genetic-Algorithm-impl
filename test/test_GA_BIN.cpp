@@ -1,6 +1,8 @@
 #include "GA_BIN_struct.hpp"
+#include "tools.hpp"
 #include <cmath>
-
+#include <iostream>
+#include <algorithm>
 double testfunc(std::vector<double>& input){
     double tmp=0.0;
     for(auto& x: input){
@@ -20,27 +22,60 @@ double rastrigin_func(std::vector<double>& input){
 }
 
 int main(){
-    GA_BIN::Params ga_params(60, 10, 6, 10, 0.6, GA_BIN::CrossMethods::SINGLE_POINT, 0.05, GA_BIN::MutMethods::CONST, 1.0, -1.0);
+    //init
+    GA_BIN::Params ga_params(300, 50, 1000, 10000, 0.8, GA_BIN::CrossMethods::SINGLE_POINT, 0.05, GA_BIN::MutMethods::CONST, 1.0, -1.0);
     ga_params.print_params();
     GA_BIN::Population population(ga_params);
+    population.print_population(ga_params, 5);
     population._update_chromo_value(ga_params);
+    population.print_population(ga_params, 5);
 
+    //eval
     population._evaluation(rastrigin_func);
-    population._refresh_selection(GA_BIN::SelMethods::BEST);
-    population.print_population(ga_params, 0);
+    auto idx = std::max_element(population.fitness_values.begin(), population.fitness_values.end());
+    std::cout << "Max fitness value: " << *idx << '\n';
+    {MEASURE_SCOPE("GA");
+        double max=0.0;
+    for(int i=0; i<ga_params.generation_num; i++){
+        std::cout << '(' << i << '/' << ga_params.generation_num << ")--";
+        //select parents
+        population._refresh_selection(GA_BIN::SelMethods::BEST);
 
-    population._mutation(ga_params);
-    population._update_chromo_value(ga_params);
+        //crossover
+        population._crossover(ga_params);
+        
+        //mutation
+        population._mutation(ga_params);
+        population._update_chromo_value(ga_params);
 
-    population._evaluation(rastrigin_func);
-    population._refresh_selection(GA_BIN::SelMethods::RANDOM);
-    population.print_population(ga_params, 0);
+        //eval
+        population._evaluation(rastrigin_func);
+        
+        auto idx = std::max_element(population.fitness_values.begin(), population.fitness_values.end());
+        std::cout << "Max fitness value: " << *idx << ", Best fitness value: " << max << '\n';
+        if(*idx>max){
+            max = *idx;
+        }
+        //select next generation
+        population._refresh_selection(GA_BIN::SelMethods::BEST);
+        population._prepare_next_generation(ga_params);
+        // population.print_population(ga_params, 100);
+    }
+    std::cout << "Best fitness value: " << max << '\n';
+    }
+    
+    // population.print_population(ga_params, 10);
+    // population._prepare_next_generation(ga_params);
 
-    population._refresh_selection(GA_BIN::SelMethods::BEST);
-    population.print_population(ga_params, 100);
-    population._crossover(ga_params);
-    population._update_chromo_value(ga_params);
-    population.print_population(ga_params, 100);
+    // population.print_population(ga_params, 100);
+    // population._update_chromo_value(ga_params);
+    // population._evaluation(rastrigin_func);
+    // population.print_population(ga_params, 100);
+
+    
+    // population._update_chromo_value(ga_params);
+    // population._evaluation(rastrigin_func);
+    // population.print_population(ga_params, 0);
 
     return 0;
 }

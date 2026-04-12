@@ -2,6 +2,7 @@
 #include <random>
 #include <algorithm>
 #include <cassert>
+#include <limits>
 #include "GA_BIN_func.hpp"
 #include "GA_BIN_struct.hpp"
 
@@ -194,22 +195,22 @@ int Population::_crossover(const Params& params, const int points){
     switch(params.crossover_method){
         case CrossMethods::SINGLE_POINT:{
             int cut_point;
-            int idx_parrent1, idx_parrent2;
+            int idx_parent1, idx_parent2;
             std::uniform_int_distribution<int> dist(1, params.chromosome_length);
             for(int i=0; i<params.crossover_prob / 2 * params.population_size; i++){
                 cut_point = dist(gen);
-                idx_parrent1 = static_cast<int>(std::max_element(selection_scores.begin(), selection_scores.end()) - selection_scores.begin());
-                selection_scores[idx_parrent1]=0;
-                idx_parrent2 = static_cast<int>(std::max_element(selection_scores.begin(), selection_scores.end()) - selection_scores.begin());
-                selection_scores[idx_parrent2]=0;
+                idx_parent1 = static_cast<int>(std::max_element(selection_scores.begin(), selection_scores.end()) - selection_scores.begin());
+                selection_scores[idx_parent1]=0;
+                idx_parent2 = static_cast<int>(std::max_element(selection_scores.begin(), selection_scores.end()) - selection_scores.begin());
+                selection_scores[idx_parent2]=0;
                 assert((chromos[current_chromo_count].size() == 0 && chromos[current_chromo_count+1].size() == 0) && "Assertion error: vector space for child isn`t empty.");
                 for(int j=0; j<params.chromosome_length; j++){
                     if(j>=cut_point){
-                        chromos[current_chromo_count].push_back(chromos[idx_parrent2][j]);
-                        chromos[current_chromo_count+1].push_back(chromos[idx_parrent1][j]);
+                        chromos[current_chromo_count].push_back(chromos[idx_parent2][j]);
+                        chromos[current_chromo_count+1].push_back(chromos[idx_parent1][j]);
                     }else{
-                        chromos[current_chromo_count].push_back(chromos[idx_parrent1][j]);
-                        chromos[current_chromo_count+1].push_back(chromos[idx_parrent2][j]);
+                        chromos[current_chromo_count].push_back(chromos[idx_parent1][j]);
+                        chromos[current_chromo_count+1].push_back(chromos[idx_parent2][j]);
                     }
                 }
                 current_chromo_count += 2;
@@ -269,5 +270,35 @@ int Population::_refresh_selection(const SelMethods sel_method){
     }
     return 0;
 };/*int Population::_refresh_selection*/
+
+int Population::_prepare_next_generation(const Params& params){
+    std::vector<size_t> pop_list;
+    pop_list.reserve(params.population_size);
+    size_t idx_min_element;
+    const int pop_count = current_chromo_count - params.population_size;
+    for(int i=0; i< pop_count; i++){
+        idx_min_element = static_cast<int>(std::min_element(selection_scores.begin(), selection_scores.end()) - selection_scores.begin());
+        selection_scores[idx_min_element] = std::numeric_limits<int>::max();
+        pop_list.push_back(idx_min_element);
+    }
+    std::sort(pop_list.begin(), pop_list.end());
+    for(int i=0; i<pop_count; i++){
+        for(size_t j=pop_list[i]; j<static_cast<size_t>(current_chromo_count-1);j++){
+            if(i+1 < pop_count){
+                if(j+1 == pop_list[i+1]){
+                    break;
+                }
+            }else if(j+1>static_cast<size_t>(current_chromo_count-1)){
+                break;
+            }
+            std::swap(chromos[j-i], chromos[j+1]);
+        }
+    }
+    for(int i=current_chromo_count-1; i >current_chromo_count-pop_count-1; i--){
+        chromos[i].clear();
+    }
+    current_chromo_count -= pop_count;
+    return 0;
+};/*int _prepare_next_generation*/
 
 };
