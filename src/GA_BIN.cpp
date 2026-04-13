@@ -41,12 +41,12 @@ std::string enum2str(MutMethods method){
     }
 }
 
-unsigned long long vector_bool2ulong
+uint64_t vector_bool2ulong
     (const std::vector<bool>& chromo,
      const size_t begin_idx,
      const size_t offset){
     assert((begin_idx + offset) <= chromo.size() && "Assertion error: Iterator calculation out of bounds!");
-    unsigned long long tmp = 0;
+    uint64_t tmp = 0;
     
     for(size_t i=0; i<offset; i++){
         if (chromo[begin_idx + i]){
@@ -54,7 +54,7 @@ unsigned long long vector_bool2ulong
         }
     }
     return tmp;
-};/*unsigned long long vector_bool2ulong*/
+};/*uint64_t vector_bool2ulong*/
 
 Params::Params(
     int chromo_len,
@@ -83,14 +83,15 @@ Params::Params(
     };/*Params::Params*/
 
 void Params::print_params(){
-    std::cout << "Chromosome length    : " << chromosome_length << '\n';
-    std::cout << "Population size      : " << population_size << '\n';
-    std::cout << "Generation number    : " << generation_num << '\n';
-    std::cout << "Crossover probability: " << crossover_prob << '\n';
-    std::cout << "Crossover method     : " << enum2str(crossover_method) << '\n';
-    std::cout << "Mutation probability : " << mutation_prob << '\n';
-    std::cout << "Mutation method      : " << enum2str(mutation_method) << '\n';
-    std::cout << "Answer count         : " << answer_count << '\n';
+    std::cout << "Chromosome length      : " << chromosome_length << '\n';
+    std::cout << "Population size        : " << population_size << '\n';
+    std::cout << "Generation number      : " << generation_num << '\n';
+    std::cout << "Parent selection method: " << enum2str(parent_selection_method) << '\n';
+    std::cout << "Crossover probability  : " << crossover_prob << '\n';
+    std::cout << "Crossover method       : " << enum2str(crossover_method) << '\n';
+    std::cout << "Mutation probability   : " << mutation_prob << '\n';
+    std::cout << "Mutation method        : " << enum2str(mutation_method) << '\n';
+    std::cout << "Answer count           : " << answer_count << '\n';
 }
 
 Population::Population(const Params& params){
@@ -110,6 +111,7 @@ Population::Population(const Params& params){
     for(auto& chromo_value: chromo_values){
         chromo_value.reserve(params.answer_count);
     }
+    function_values.reserve(pop_size*2);
     fitness_values.reserve(pop_size*2);
     temp_vec_bool.reserve(chromo_len);
 

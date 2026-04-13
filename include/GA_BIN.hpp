@@ -34,7 +34,7 @@ std::string enum2str(SelMethods method);
 std::string enum2str(CrossMethods method);
 std::string enum2str(MutMethods method);
 
-unsigned long long vector_bool2ulong(const std::vector<bool>&, const size_t, const size_t);
+uint64_t vector_bool2ulong(const std::vector<bool>&, const size_t, const size_t);
 
 struct Params{
     int chromosome_length;
@@ -56,7 +56,7 @@ struct Params{
             const int pop_size = 50,
             const int gen_num = 1000,
             SelMethods parent_sel_meth= SelMethods::TOURNAMENT,
-            const float cross_prob = 0.6f,
+            const float cross_prob = 0.8f,
             const CrossMethods cross_meth = CrossMethods::SINGLE_POINT,
             const float mut_prob = 0.05f,
             const MutMethods mut_meth = MutMethods::CONST,
@@ -72,6 +72,7 @@ struct Population{
     /*Data*/
     std::vector<std::vector<bool>> chromos;
     std::vector<std::vector<double>> chromo_values;
+    std::vector<double> function_values;
     std::vector<double> fitness_values;
     std::discrete_distribution<int> current_roulette_dist;
     double range_chromos;
@@ -94,11 +95,15 @@ struct Population{
     int _mutation(const Params&);
     template<typename Func> int _evaluation(Func f){
         fitness_values.clear();
+        function_values.clear(); // 清空舊的原始值
         for(size_t i=0; i<chromos.size();i++){
             if(chromos[i].size() == 0){
                 break;
             };
-            fitness_values.push_back(_fitness_value(f, chromo_values[i]));
+            double function_value = f(chromo_values[i]);
+            function_values.push_back(function_value);
+            
+            fitness_values.push_back(1.0 / (1.0 + std::abs(function_value)));
         }
         return 0;
     }/*int _evaluation*/

@@ -1,8 +1,10 @@
-build*/
+*build*/
 .vscode/
 *cache*
 *tmp
 *.bkp
+.DS_Store
+*.csv
 # Prerequisites
 *.d
 

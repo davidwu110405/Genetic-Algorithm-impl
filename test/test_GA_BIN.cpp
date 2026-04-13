@@ -21,7 +21,7 @@ void test_utilities() {
 
     // 測試二進位轉換功能 (測試位元 1010，預期為十進位的 10)
     std::vector<bool> bits = {true, false, true, false};
-    unsigned long long val = GA_BIN::vector_bool2ulong(bits, 0, 4);
+    uint64_t val = GA_BIN::vector_bool2ulong(bits, 0, 4);
     std::cout << "二進位 1010 轉換結果: " << val << " (預期: 10)\n";
     assert(val == 10 && "Assertion failed: vector_bool2ulong 運算錯誤!");
     
