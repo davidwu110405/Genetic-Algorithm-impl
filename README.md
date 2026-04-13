@@ -17,9 +17,8 @@
     * 單點交配 (Single-Point Crossover)
     * 常數機率位元翻轉突變 (Constant Probability Bit-Flip Mutation)
 * **工程與分析工具**：
-    * 提供 `GA_Wrapper`，支援泛型（Template）目標函數傳入。
-    * 內建 CSV 匯出功能，可記錄每代最佳適應度、原始目標函數值及染色體數據，便於繪製學習曲線。
-    * 支援 CMake `Debug` / `Release` 多重建置模式。
+    * 提供 `GA_Wrapper`，支援Template目標函數傳入。
+    * 內建 CSV 匯出，可記錄每代最佳適應度、原始目標函數值及染色體數據。
 
 ### 未實作部分
 * **交配機制擴充**：多點交配 (Multi-Point Crossover) 與均勻交配 (Uniform Crossover)。
@@ -27,7 +26,7 @@
 
 ### TODO:
 * **平行運算加速**：引入 OpenMP 或 dispatch(Apple silicon)。
-* **實數編碼支援**：加入實數編碼 (Real-value encoding) 介面。
+* **實數編碼支援**：加入實數編碼。
 
 ---
 

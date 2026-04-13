@@ -5,6 +5,9 @@
 *.bkp
 .DS_Store
 *.csv
+Rastrigin_result/
+Schwefel_result/
+private/
 # Prerequisites
 *.d
 

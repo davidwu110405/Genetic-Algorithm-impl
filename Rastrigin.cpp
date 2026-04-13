@@ -34,7 +34,7 @@ int main(){
 
     // run_ga(GA::BIN::Params, targetfunction, verbose(bool), csv filename)
     // verbose: 是否列印進度
-    GAResult result = run_ga(params, rastrigin_func, true, "Rastrigin1.csv");
+    GAResult result = run_ga(params, rastrigin_func, true, "Rastrigin_result/Rastrigin.csv");
 
     std::cout << "\n=== 最佳解尋找完成 ===\n";
     std::cout << "最佳 Fitness: " << std::fixed << std::setprecision(6) << result.best_fitness << "\n";

@@ -20,7 +20,7 @@ int main(){
         300, // chromosome_length
         50, // bits_per_answer
         50, // population_size (群體大小)
-        1000, // generation_num (最大世代數)
+        10000, // generation_num (最大世代數)
         GA_BIN::SelMethods::TOURNAMENT, //parent 選擇方法
         0.8f, // crossover_prob (交配機率 80%)
         GA_BIN::CrossMethods::SINGLE_POINT, // crossover_method
@@ -35,7 +35,7 @@ int main(){
 
     // run_ga(GA::BIN::Params, targetfunction, verbose(bool), csv filename)
     // verbose: 是否列印進度
-    GAResult result = run_ga(params, schwefel_func, true, "Schwefel.csv");
+    GAResult result = run_ga(params, schwefel_func, true, "Schwefel_result/Schwefel.csv");
 
     std::cout << "\n=== 最佳解尋找完成 ===\n";
     std::cout << "最佳 Fitness: " << std::fixed << std::setprecision(6) << result.best_fitness << "\n";
