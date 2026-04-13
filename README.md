@@ -68,7 +68,9 @@
     ./build/bin/Schwefel
     ```
 
-## 📂 專案架構與檔案說明 (Directory Structure)
+---
+
+## 專案架構與檔案說明
 
 ```text
 .
