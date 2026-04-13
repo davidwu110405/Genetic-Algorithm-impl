@@ -1,6 +1,4 @@
-# C++ Binary-Coded Genetic Algorithm (GA_BIN)
-
-這是一個以現代 C++ (C++ standard 17) 撰寫的高效能二進位基因演算法（Binary-Coded Genetic Algorithm）函式庫。本專案採用平行陣列（Struct of Arrays, SoA）架構設計，著重於記憶體連續性與運算效能，並提供了高度模組化的參數設定，適用於解算各類連續變數的最佳化問題。
+# C++ Binary-Coded Genetic Algorithm
 
 ## 功能實作狀況
 
