@@ -12,7 +12,7 @@ endif()
 # add_library(lib_GA STATIC src/GA.cpp)
 # target_include_directories(lib_GA PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_library(lib_GA_BIN STATIC src/GA_BIN_struct.cpp src/GA_BIN_func.cpp)
+add_library(lib_GA_BIN STATIC src/GA_BIN.cpp)
 target_include_directories(lib_GA_BIN PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_library(lib_tools STATIC src/tools.cpp)
@@ -27,3 +27,6 @@ target_link_libraries(test_GA_BIN PRIVATE lib_GA_BIN)
 
 add_executable(test_performance test/performance.cpp)
 target_link_libraries(test_performance PRIVATE lib_GA_BIN lib_tools)
+
+add_executable(main_func1 func1.cpp)
+target_link_libraries(main_func1 PRIVATE lib_GA_BIN)

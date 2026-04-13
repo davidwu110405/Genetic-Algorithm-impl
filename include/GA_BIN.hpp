@@ -7,6 +7,8 @@
 #include <random>
 #include <cassert>
 #include <array>
+#include <iostream>
+#include <algorithm>
 
 namespace GA_BIN{
 
@@ -15,6 +17,7 @@ enum struct SelMethods{
     RANDOM,
     ROULETTE_DEFAULT,
     ROULETTE_RANK,
+    TOURNAMENT
 };
 
 enum struct CrossMethods{
@@ -31,10 +34,13 @@ std::string enum2str(SelMethods method);
 std::string enum2str(CrossMethods method);
 std::string enum2str(MutMethods method);
 
+unsigned long long vector_bool2ulong(const std::vector<bool>&, const size_t, const size_t);
+
 struct Params{
     int chromosome_length;
     int population_size;
     int generation_num;
+    SelMethods parent_selection_method;
     float crossover_prob;
     CrossMethods crossover_method;
     float mutation_prob;
@@ -45,16 +51,17 @@ struct Params{
 
     void print_params();
 
-    Params( const int chromo_len = 60,
-            const int bits = 10,
-            const int pop_size = 10,
-            const int gen_num = 10,
+    Params( const int chromo_len = 360,
+            const int bits = 60,
+            const int pop_size = 50,
+            const int gen_num = 1000,
+            SelMethods parent_sel_meth= SelMethods::TOURNAMENT,
             const float cross_prob = 0.6f,
             const CrossMethods cross_meth = CrossMethods::SINGLE_POINT,
             const float mut_prob = 0.05f,
             const MutMethods mut_meth = MutMethods::CONST,
-            const double upper = 10.0,
-            const double lower = -10.0
+            const double upper = 5.12,
+            const double lower = -5.12
     );
     ~Params() = default;
 };
@@ -66,7 +73,7 @@ struct Population{
     std::vector<std::vector<bool>> chromos;
     std::vector<std::vector<double>> chromo_values;
     std::vector<double> fitness_values;
-    std::vector<int> selection_scores;
+    std::discrete_distribution<int> current_roulette_dist;
     double range_chromos;
     int generation_count;
     int current_chromo_count;
@@ -95,8 +102,9 @@ struct Population{
         }
         return 0;
     }/*int _evaluation*/
-    int _crossover(const Params&, int points=2);
-    int _refresh_selection(const SelMethods);
+    int _init_selection(const Params& params);
+    std::pair<int, int> _select2parents(const Params& params);
+    int _crossover(const Params&, int points=1);
     int _prepare_next_generation(const Params&);
 };/*struct Population*/
 
