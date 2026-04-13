@@ -56,13 +56,13 @@
 ### 編譯步驟
 
 1. **建立建置目錄及編譯**
-    在專案根目錄下，開啟終端機並執行：
+
+    在專案根目錄下執行：
     ```bash
     cmake -B build
     cmake --build build
     ```
 2. **執行可執行檔**
-    在專案根目錄下，開啟終端機並執行：
     ```bash
     ./build/bin/Rastrigin
     ./build/bin/Schwefel
