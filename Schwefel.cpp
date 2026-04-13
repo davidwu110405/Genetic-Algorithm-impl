@@ -26,18 +26,17 @@ int main(){
         GA_BIN::CrossMethods::SINGLE_POINT, // crossover_method
         0.1f, // mutation_prob (突變機率 5%)
         GA_BIN::MutMethods::CONST, // mutation_method
-        500.0, // 搜尋上界 (Sphere 常用邊界)
+        500.0, // 搜尋上界
         -500.0 // 搜尋下界
     );
     
     std::cout << "開始執行 GA:\n";
     params.print_params();
 
-    // 2. 一行呼叫 GA (開啟 verbose 印出進度)
     // run_ga(GA::BIN::Params, targetfunction, verbose(bool), csv filename)
-    GAResult result = run_ga(params, schwefel_func, true, "test1.csv");
+    // verbose: 是否列印進度
+    GAResult result = run_ga(params, schwefel_func, true, "Schwefel.csv");
 
-    // 3. 顯示結果
     std::cout << "\n=== 最佳解尋找完成 ===\n";
     std::cout << "最佳 Fitness: " << std::fixed << std::setprecision(6) << result.best_fitness << "\n";
     
