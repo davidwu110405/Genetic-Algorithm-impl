@@ -25,7 +25,7 @@ GAResult run_ga(const GA_BIN::Params& params, Func fitness_func, bool verbose = 
         csv_file.open(csv_filename);
         if (csv_file.is_open()) {
             //CSV column header
-            csv_file << "Generation,BestFitnessValue, BestFunctionValue";
+            csv_file << "Generation,BestFitnessValue, BestFunctionValue,";
             for(int i = 0; i < params.answer_count; i++) {
                 csv_file << "x_" << i << ",";
             }
