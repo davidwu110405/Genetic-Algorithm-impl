@@ -51,14 +51,14 @@ struct Params{
 
     void print_params();
 
-    Params( const int chromo_len = 360,
-            const int bits = 60,
+    Params( const int chromo_len = 300,
+            const int bits = 50,
             const int pop_size = 50,
             const int gen_num = 1000,
             SelMethods parent_sel_meth= SelMethods::TOURNAMENT,
             const float cross_prob = 0.8f,
             const CrossMethods cross_meth = CrossMethods::SINGLE_POINT,
-            const float mut_prob = 0.05f,
+            const float mut_prob = 0.1f,
             const MutMethods mut_meth = MutMethods::CONST,
             const double upper = 5.12,
             const double lower = -5.12
@@ -86,10 +86,6 @@ struct Population{
     static std::mt19937& get_random_engine();
     void print_population(const Params&, int);
     
-    template<typename Func> double _fitness_value(Func f, std::vector<double>& x){
-        return 1/(1+std::abs(f(x)));
-    }
-
     /*main functions*/
     int _update_chromo_value(const Params&);
     int _mutation(const Params&);
